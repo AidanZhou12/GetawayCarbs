@@ -11,3 +11,8 @@ def get_posts():
     else:
         print(f"Error: {response.status_code}")
         return []
+
+def create_post(post_data):
+    headers = {"Content-Type": "application/json"}
+    response = requests.post(url + "posts", data=json.dumps(post_data), headers=headers)
+    return response
