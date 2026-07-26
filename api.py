@@ -31,3 +31,9 @@ def join_plan(post_id, user_id):
     participant_data = {"user_id": user_id}
     response = requests.post(url + f"posts/{post_id}/join", data=json.dumps(participant_data), headers=headers)
     return response
+
+def create_user(name):
+    headers = {"Content-Type": "application/json"}
+    user_data = {"username": name}
+    response = requests.post(url + "users", data=json.dumps(user_data), headers=headers)
+    return response
