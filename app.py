@@ -10,17 +10,23 @@ if "user_id" not in st.session_state:
         submitted = st.form_submit_button("Continue")
 
         if submitted:
-            response = api.create_user(username)
-
-            if response.status_code == 201:
-                user = response.json()
-
-                st.session_state["user_id"] = user["id"]
-                st.session_state["username"] = user["username"]
-
+            ident = api.get_id(username)
+            if ident:
+                st.session_state["user_id"] = ident
+                st.session_state["username"] = username
                 st.rerun()
             else:
-                st.error(response.json().get("detail", "Something went wrong"))
+                response = api.create_user(username)
+
+                if response.status_code == 201:
+                    user = response.json()
+
+                    st.session_state["user_id"] = user["id"]
+                    st.session_state["username"] = user["username"]
+
+                    st.rerun()
+                else:
+                    st.error(response.json().get("detail", "Something went wrong"))
 
     st.stop()
 
@@ -36,10 +42,9 @@ with create:
     order_type = st.selectbox("Order Type", ["Dine In", "Takeout", "Pickup"])
     departure_time = st.time_input("Departure Time", step=300, value="12:00")
     notes = st.text_area("Additional Notes (Optional)")
-    username = st.text_input("Your Name")
 
     if st.button("Create Plan"):
-        if not restaurant or not order_type or not departure_time or not username:
+        if not restaurant or not order_type or not departure_time:
             st.error("Please fill in all required fields.")
         else:
             post_data = {
@@ -47,7 +52,7 @@ with create:
                 "order": order_type,
                 "departure": departure_time.strftime("%H:%M"),
                 "notes": notes,
-                "user_id": api.get_id(username)
+                "user_id": st.session_state["user_id"]
             }
             response = api.create_post(post_data)
             if response.status_code == 201:
@@ -74,21 +79,13 @@ with plans:
             st.write(f'**Leaving at:** {post["departure"][11:16]}')
             st.write(f'**Additional Notes:** {post["notes"]}')
             st.write(f'**Participants:** {", ".join([p["user"]["username"] for p in post["participants"]])}')
-            with st.form(f"join_form_{post['id']}"):
-                name = st.text_input("Your Name", key=f"name_{post['id']}")
-                submitted = st.form_submit_button("Join Plan")
-                if submitted:
-                    if not name:
-                        st.error("Please enter your name to join")
-                    else:
-                        user_id = api.get_id(name)
-                        if user_id is None:
-                            st.error("User not found. Please create a plan first.")
-                        else:
-                            join_response = api.join_plan(post["id"], user_id)
-                            if join_response.status_code == 201:
-                                st.rerun()
-                            else:
-                                st.error(f"Error joining plan: {join_response.json().get('detail', 'Unknown error')}")
+            if st.button("Join Plan", key=f"join_{post['id']}"):
+                user_id = st.session_state["user_id"]
+                response = api.join_plan(post["id"], user_id)
+                if response.status_code == 201:
+                    st.success("Successfully joined the plan!")
+                    st.rerun()
+                else:
+                    st.error(f"Error joining plan: {response.json().get('detail', 'Unknown error')}")
 
 
