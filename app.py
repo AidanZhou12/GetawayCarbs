@@ -25,7 +25,7 @@ with create:
                 "order": order_type,
                 "departure": departure_time.strftime("%H:%M"),
                 "notes": notes,
-                "user_id": 1
+                "user_id": api.get_id(username)
             }
             response = api.create_post(post_data)
             if response.status_code == 201:

@@ -16,3 +16,12 @@ def create_post(post_data):
     headers = {"Content-Type": "application/json"}
     response = requests.post(url + "posts", data=json.dumps(post_data), headers=headers)
     return response
+
+def get_id(username):
+    response = requests.get(url + f"users/{username}")
+    if response.status_code == 200:
+        user = response.json()
+        return user["id"]
+    else:
+        print(f"Error: {response.status_code}")
+        return None
