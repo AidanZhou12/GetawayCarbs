@@ -14,7 +14,7 @@ with create:
     order_type = st.selectbox("Order Type", ["Dine In", "Takeout", "Pickup"])
     departure_time = st.time_input("Departure Time", step=300, value="12:00")
     notes = st.text_area("Additional Notes (Optional)")
-    username = st.text_input("Your Username")
+    username = st.text_input("Your Name")
 
     if st.button("Create Plan"):
         if not restaurant or not order_type or not departure_time or not username:
