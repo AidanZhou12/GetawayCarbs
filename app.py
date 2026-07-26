@@ -1,6 +1,6 @@
 import streamlit as st
 import api
-from datetime import time
+from datetime import datetime, time
 
 st.set_page_config(page_title="Getaway Carbs")
 st.title("Getaway Carbs")
@@ -35,7 +35,16 @@ with create:
 
 with plans:
     posts = api.get_posts()
-    for post in posts:
+    def parse_departure(post):
+        departure = post.get("departure", "")
+        if departure.endswith("Z"):
+            departure = departure[:-1] + "+00:00"
+        try:
+            return datetime.fromisoformat(departure)
+        except ValueError:
+            return datetime.min
+
+    for post in sorted(posts, key=parse_departure):
         box = st.container(border=True)
         with box:
             st.title(post["restaurant"])
