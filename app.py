@@ -1,5 +1,6 @@
 import streamlit as st
 import api
+from datetime import time
 
 st.set_page_config(page_title="Getaway Carbs")
 st.title("Getaway Carbs")
@@ -11,7 +12,7 @@ with create:
     st.header("Create a New Plan")
     restaurant = st.text_input("Restaurant Name")
     order_type = st.selectbox("Order Type", ["Dine In", "Takeout", "Pickup"])
-    departure_time = st.time_input("Departure Time")
+    departure_time = st.time_input("Departure Time", step=300, value="12:00")
     notes = st.text_area("Additional Notes (Optional)")
     username = st.text_input("Your Username")
 
@@ -24,7 +25,7 @@ with create:
                 "order": order_type,
                 "departure": departure_time.strftime("%H:%M"),
                 "notes": notes,
-                "user_id": 1,  # Replace with actual user ID after authentication
+                "user_id": 1
             }
             response = api.create_post(post_data)
             if response.status_code == 201:
