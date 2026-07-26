@@ -3,6 +3,7 @@ import api
 
 st.set_page_config(page_title="Getaway Carbs")
 st.title("Getaway Carbs")
+st.space("large")
 
 posts = api.get_posts()
 
