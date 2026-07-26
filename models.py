@@ -8,27 +8,87 @@ from enums import OrderType
 class User(Base):
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    username: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        index=True,
+    )
+    username: Mapped[str] = mapped_column(
+        String(50),
+        unique=True,
+        nullable=False,
+    )
 
-    posts: Mapped[list[Post]] = relationship(back_populates="author")
+    posts: Mapped[list[Post]] = relationship(
+        back_populates="author"
+    )
+
+    participations: Mapped[list[Participant]] = relationship(
+        back_populates="user"
+    )
 
 
 class Post(Base):
     __tablename__ = "posts"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    restaurant: Mapped[str] = mapped_column(String(100), nullable=False)
-    order: Mapped[OrderType] = mapped_column(Text, nullable=False)
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        index=True,
+    )
+    restaurant: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+    )
+    order: Mapped[OrderType] = mapped_column(
+        Text,
+        nullable=False,
+    )
     departure: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
-        nullable=False
+        nullable=False,
     )
     date_posted: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), 
+        DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
-        nullable=False
+        nullable=False,
     )
-    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
-    author: Mapped[User] = relationship(back_populates="posts")
+    notes: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id"),
+        nullable=False,
+    )
+
+    author: Mapped[User] = relationship(
+        back_populates="posts"
+    )
+
+    participants: Mapped[list[Participant]] = relationship(
+        back_populates="post"
+    )
+
+
+class Participant(Base):
+    __tablename__ = "participants"
+
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id"),
+        primary_key=True,
+    )
+
+    post_id: Mapped[int] = mapped_column(
+        ForeignKey("posts.id"),
+        primary_key=True,
+    )
+
+    user: Mapped[User] = relationship(
+        back_populates="participations"
+    )
+
+    post: Mapped[Post] = relationship(
+        back_populates="participants"
+    )

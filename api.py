@@ -25,3 +25,9 @@ def get_id(username):
     else:
         print(f"Error: {response.status_code}")
         return None
+
+def join_plan(post_id, user_id):
+    headers = {"Content-Type": "application/json"}
+    participant_data = {"user_id": user_id}
+    response = requests.post(url + f"posts/{post_id}/join", data=json.dumps(participant_data), headers=headers)
+    return response

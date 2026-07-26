@@ -28,9 +28,20 @@ class PostCreate(PostBase):
     departure: time
 
 
+class ParticipantCreate(BaseModel):
+    user_id: int
+
+
+class ParticipantResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    user: UserResponse
+
+
 class PostResponse(PostBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
     date_posted: datetime
     author: UserResponse
+    participants: list[ParticipantResponse]

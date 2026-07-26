@@ -43,7 +43,6 @@ with plans:
             return datetime.fromisoformat(departure)
         except ValueError:
             return datetime.min
-
     for post in sorted(posts, key=parse_departure):
         box = st.container(border=True)
         with box:
@@ -52,5 +51,22 @@ with plans:
             st.write(f'**Order Type:** {post["order"]}')
             st.write(f'**Leaving at:** {post["departure"][11:16]}')
             st.write(f'**Additional Notes:** {post["notes"]}')
+            st.write(f'**Participants:** {", ".join([p["user"]["username"] for p in post["participants"]])}')
+            with st.form(f"join_form_{post['id']}"):
+                name = st.text_input("Your Name", key=f"name_{post['id']}")
+                submitted = st.form_submit_button("Join Plan")
+                if submitted:
+                    if not name:
+                        st.error("Please enter your name to join")
+                    else:
+                        user_id = api.get_id(name)
+                        if user_id is None:
+                            st.error("User not found. Please create a plan first.")
+                        else:
+                            join_response = api.join_plan(post["id"], user_id)
+                            if join_response.status_code == 201:
+                                st.rerun()
+                            else:
+                                st.error(f"Error joining plan: {join_response.json().get('detail', 'Unknown error')}")
 
 
