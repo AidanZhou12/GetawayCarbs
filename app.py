@@ -2,6 +2,28 @@ import streamlit as st
 import api
 from datetime import datetime, time
 
+if "user_id" not in st.session_state:
+    st.title("Welcome to Getaway Carbs")
+
+    with st.form("user_form"):
+        username = st.text_input("Enter your name")
+        submitted = st.form_submit_button("Continue")
+
+        if submitted:
+            response = api.create_user(username)
+
+            if response.status_code == 201:
+                user = response.json()
+
+                st.session_state["user_id"] = user["id"]
+                st.session_state["username"] = user["username"]
+
+                st.rerun()
+            else:
+                st.error(response.json().get("detail", "Something went wrong"))
+
+    st.stop()
+
 st.set_page_config(page_title="Getaway Carbs")
 st.title("Getaway Carbs")
 st.space("large")
