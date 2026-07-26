@@ -12,6 +12,9 @@ from schemas import (
     ParticipantResponse
 )
 from sqlalchemy.orm import selectinload
+from zoneinfo import ZoneInfo
+
+CENTRAL = ZoneInfo("America/Chicago")
 
 router = APIRouter()
 
@@ -37,7 +40,7 @@ def create_post(post: PostCreate, db: Annotated[Session, Depends(get_db)]):
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found",
         )
-    departure = datetime.combine(datetime.now().date(), post.departure)
+    departure = datetime.combine(datetime.now(CENTRAL).date(), post.departure, tzinfo=CENTRAL)
     new_post = models.Post(
         restaurant=post.restaurant,
         order=post.order,

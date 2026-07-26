@@ -1,9 +1,12 @@
 from __future__ import annotations
-from datetime import UTC, datetime
+from datetime import datetime
 from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from database import Base
 from enums import OrderType
+from zoneinfo import ZoneInfo
+
+CENTRAL = ZoneInfo("America/Chicago")
 
 class User(Base):
     __tablename__ = "users"
@@ -50,7 +53,7 @@ class Post(Base):
     )
     date_posted: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
-        default=lambda: datetime.now(UTC),
+        default=lambda: datetime.now(CENTRAL),
         nullable=False,
     )
     notes: Mapped[str | None] = mapped_column(
