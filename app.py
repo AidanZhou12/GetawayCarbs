@@ -1,6 +1,9 @@
 import streamlit as st
 import api
 from datetime import datetime, time
+from zoneinfo import ZoneInfo
+
+CENTRAL = ZoneInfo("America/Chicago")
 
 if "user_id" not in st.session_state:
     st.title("Welcome to Getaway Carbs")
@@ -62,15 +65,23 @@ with create:
 
 with plans:
     posts = api.get_posts()
+
     def parse_departure(post):
         departure = post.get("departure", "")
         if departure.endswith("Z"):
             departure = departure[:-1] + "+00:00"
         try:
-            return datetime.fromisoformat(departure)
+            parsed = datetime.fromisoformat(departure)
+            if parsed.tzinfo is None:
+                return parsed.replace(tzinfo=CENTRAL)
+            return parsed.astimezone(CENTRAL)
         except ValueError:
-            return datetime.min
-    for post in sorted(posts, key=parse_departure):
+            return datetime.min.replace(tzinfo=CENTRAL)
+
+    now_central = datetime.now(CENTRAL)
+    upcoming_posts = [post for post in posts if parse_departure(post) >= now_central]
+
+    for post in sorted(upcoming_posts, key=parse_departure):
         box = st.container(border=True)
         with box:
             st.title(post["restaurant"])
