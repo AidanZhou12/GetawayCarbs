@@ -37,7 +37,7 @@ st.set_page_config(page_title="Getaway Carbs")
 st.title("Getaway Carbs")
 st.space("large")
 
-create, plans = st.tabs(["Create a Plan", "View Plans"]) 
+create, plans, mine = st.tabs(["Create a Plan", "View Plans", "My Plans"]) 
 
 with create:
     st.header("Create a New Plan")
@@ -98,5 +98,32 @@ with plans:
                     st.rerun()
                 else:
                     st.error(f"Error joining plan: {response.json().get('detail', 'Unknown error')}")
+
+with mine:
+    posts = api.get_user_posts(st.session_state["user_id"])
+
+    def parse_departure(post):
+        departure = post.get("departure", "")
+        if departure.endswith("Z"):
+            departure = departure[:-1] + "+00:00"
+        try:
+            parsed = datetime.fromisoformat(departure)
+            if parsed.tzinfo is None:
+                return parsed.replace(tzinfo=CENTRAL)
+            return parsed.astimezone(CENTRAL)
+        except ValueError:
+            return datetime.min.replace(tzinfo=CENTRAL)
+
+    now_central = datetime.now(CENTRAL)
+    upcoming_posts = [post for post in posts if parse_departure(post) >= now_central]
+
+    for post in sorted(upcoming_posts, key=parse_departure):
+        box = st.container(border=True)
+        with box:
+            st.title(post["restaurant"])
+            st.write(f'**Order Type:** {post["order"]}')
+            st.write(f'**Leaving at:** {post["departure"][11:16]}')
+            st.write(f'**Additional Notes:** {post["notes"]}')
+            st.write(f'**Participants:** {", ".join([p["user"]["username"] for p in post["participants"]])}')
 
 

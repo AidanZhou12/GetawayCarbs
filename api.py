@@ -37,3 +37,12 @@ def create_user(name):
     user_data = {"username": name}
     response = requests.post(url + "users", data=json.dumps(user_data), headers=headers)
     return response
+
+def get_user_posts(user_id):
+    response = requests.get(url + f"users/{user_id}/posts")
+    if response.status_code == 200:
+        posts = response.json()
+        return posts
+    else:
+        print(f"Error: {response.status_code}")
+        return []

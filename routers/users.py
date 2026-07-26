@@ -6,7 +6,8 @@ import models
 from database import get_db
 from schemas import (
     UserCreate,
-    UserResponse
+    UserResponse,
+    PostResponse
 )
 
 router = APIRouter()
@@ -52,3 +53,11 @@ def get_user_by_username(username: str, db: Annotated[Session, Depends(get_db)])
             detail="User not found",
         )
     return user
+
+@router.get("/{user_id}/posts", response_model=list[PostResponse])
+def get_user_posts(user_id: int, db: Annotated[Session, Depends(get_db)]):
+    result = db.execute(
+        select(models.Post).where(models.Post.user_id == user_id)
+    )
+    posts = result.scalars().all()
+    return posts
