@@ -46,3 +46,7 @@ def get_user_posts(user_id):
     else:
         print(f"Error: {response.status_code}")
         return []
+
+def delete_post(post_id):
+    response = requests.delete(url + f"posts/{post_id}")
+    return response

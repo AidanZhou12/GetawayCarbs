@@ -125,5 +125,12 @@ with mine:
             st.write(f'**Leaving at:** {post["departure"][11:16]}')
             st.write(f'**Additional Notes:** {post["notes"]}')
             st.write(f'**Participants:** {", ".join([p["user"]["username"] for p in post["participants"]])}')
+            if st.button("Delete Plan", key=f"delete_{post['id']}"):
+                response = api.delete_post(post["id"])
+                if response.status_code == 204:
+                    st.success("Plan deleted successfully!")
+                    st.rerun()
+                else:
+                    st.error(f"Error deleting plan: {response.json().get('detail', 'Unknown error')}")
 
 

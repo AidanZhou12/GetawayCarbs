@@ -27,7 +27,7 @@ class User(Base):
     )
 
     participations: Mapped[list[Participant]] = relationship(
-        back_populates="user"
+        back_populates="user",
     )
 
 
@@ -71,7 +71,8 @@ class Post(Base):
     )
 
     participants: Mapped[list[Participant]] = relationship(
-        back_populates="post"
+        back_populates="post",
+        cascade="all, delete-orphan"
     )
 
 

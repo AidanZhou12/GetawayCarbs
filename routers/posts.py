@@ -91,3 +91,16 @@ def join_post(post_id: int, participant: ParticipantCreate, db: Annotated[Sessio
     db.commit()
     db.refresh(new_participant)
     return new_participant
+
+@router.delete("/{post_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_post(post_id: int, db: Annotated[Session, Depends(get_db)]):
+    post = db.execute(
+        select(models.Post).where(models.Post.id == post_id)
+    ).scalars().first()
+    if not post:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Post not found",
+        )
+    db.delete(post)
+    db.commit()
