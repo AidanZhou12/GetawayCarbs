@@ -71,3 +71,20 @@ def get_user_joins(user_id: int, db: Annotated[Session, Depends(get_db)]):
     )
     posts = result.scalars().all()
     return posts
+
+@router.delete("/{post_id}", status_code=status.HTTP_204_NO_CONTENT)
+def leave_plan(post_id: int, user_id: int, db: Annotated[Session, Depends(get_db)]):
+    result = db.execute(
+        select(models.Participant).where(
+            models.Participant.post_id == post_id,
+            models.Participant.user_id == user_id,
+        )
+    )
+    participant = result.scalars().first()
+    if not participant:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Participation not found",
+        )
+    db.delete(participant)
+    db.commit()

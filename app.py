@@ -132,5 +132,13 @@ with joins:
             st.write(f'**Leaving at:** {post["departure"][11:16]}')
             st.write(f'**Additional Notes:** {post["notes"]}')
             st.write(f'**Participants:** {", ".join([p["user"]["username"] for p in post["participants"]])}')
+            if st.button("Leave Plan", key=f"leave_{post['id']}"):
+                user_id = st.session_state["user_id"]
+                response = api.leave_plan(post["id"], user_id)
+                if response.status_code == 204:
+                    st.success("Successfully left the plan!")
+                    st.rerun()
+                else:
+                    st.error(f"Error leaving plan: {response.json().get('detail', 'Unknown error')}")
 
 

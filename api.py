@@ -58,3 +58,7 @@ def get_user_joins(user_id):
     else:
         print(f"Error: {response.status_code}")
         return []
+
+def leave_plan(post_id, user_id):
+    response = requests.delete(url + f"users/{post_id}", params={"user_id": user_id})
+    return response
