@@ -13,23 +13,26 @@ if "user_id" not in st.session_state:
         submitted = st.form_submit_button("Continue")
 
         if submitted:
-            ident = api.get_id(username)
-            if ident:
-                st.session_state["user_id"] = ident
-                st.session_state["username"] = username
-                st.rerun()
-            else:
-                response = api.create_user(username)
-
-                if response.status_code == 201:
-                    user = response.json()
-
-                    st.session_state["user_id"] = user["id"]
-                    st.session_state["username"] = user["username"]
-
+            if username:
+                ident = api.get_id(username)
+                if ident:
+                    st.session_state["user_id"] = ident
+                    st.session_state["username"] = username
                     st.rerun()
                 else:
-                    st.error(response.json().get("detail", "Something went wrong"))
+                    response = api.create_user(username)
+
+                    if response.status_code == 201:
+                        user = response.json()
+
+                        st.session_state["user_id"] = user["id"]
+                        st.session_state["username"] = user["username"]
+
+                        st.rerun()
+                    else:
+                        st.error(response.json().get("detail", "Something went wrong"))
+            else:
+                st.error("Please enter a valid name")
 
     st.stop()
 
