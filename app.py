@@ -51,7 +51,7 @@ st.set_page_config(page_title="Getaway Carbs")
 st.title("Getaway Carbs")
 st.space("large")
 
-create, plans, mine = st.tabs(["Create a Plan", "View Plans", "My Plans"]) 
+create, plans, mine, joins = st.tabs(["Create a Plan", "View Plans", "My Plans", "My Joins"]) 
 
 with create:
     st.header("Create a New Plan")
@@ -118,5 +118,19 @@ with mine:
                     st.rerun()
                 else:
                     st.error(f"Error deleting plan: {response.json().get('detail', 'Unknown error')}")
+
+with joins:
+    posts = api.get_user_joins(st.session_state["user_id"])
+    upcoming_posts = [post for post in posts if parse_departure(post) >= now_central]
+
+    for post in sorted(upcoming_posts, key=parse_departure):
+        box = st.container(border=True)
+        with box:
+            st.title(post["restaurant"])
+            st.write(f'**Organizer:** {post["author"]["username"]}')
+            st.write(f'**Order Type:** {post["order"]}')
+            st.write(f'**Leaving at:** {post["departure"][11:16]}')
+            st.write(f'**Additional Notes:** {post["notes"]}')
+            st.write(f'**Participants:** {", ".join([p["user"]["username"] for p in post["participants"]])}')
 
 

@@ -61,3 +61,13 @@ def get_user_posts(user_id: int, db: Annotated[Session, Depends(get_db)]):
     )
     posts = result.scalars().all()
     return posts
+
+@router.get("/{user_id}/joins", response_model=list[PostResponse])
+def get_user_joins(user_id: int, db: Annotated[Session, Depends(get_db)]):
+    result = db.execute(
+        select(models.Post)
+        .join(models.Participant)
+        .where(models.Participant.user_id == user_id)
+    )
+    posts = result.scalars().all()
+    return posts

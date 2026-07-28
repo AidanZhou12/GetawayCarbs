@@ -49,3 +49,12 @@ def get_user_posts(user_id):
 def delete_post(post_id):
     response = requests.delete(url + f"posts/{post_id}")
     return response
+
+def get_user_joins(user_id):
+    response = requests.get(url + f"users/{user_id}/joins")
+    if response.status_code == 200:
+        posts = response.json()
+        return posts
+    else:
+        print(f"Error: {response.status_code}")
+        return []
