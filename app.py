@@ -33,6 +33,20 @@ if "user_id" not in st.session_state:
 
     st.stop()
 
+def parse_departure(post):
+    departure = post.get("departure", "")
+    if departure.endswith("Z"):
+        departure = departure[:-1] + "+00:00"
+    try:
+        parsed = datetime.fromisoformat(departure)
+        if parsed.tzinfo is None:
+            return parsed.replace(tzinfo=CENTRAL)
+        return parsed.astimezone(CENTRAL)
+    except ValueError:
+        return datetime.min.replace(tzinfo=CENTRAL)
+
+now_central = datetime.now(CENTRAL)
+
 st.set_page_config(page_title="Getaway Carbs")
 st.title("Getaway Carbs")
 st.space("large")
@@ -65,20 +79,6 @@ with create:
 
 with plans:
     posts = api.get_posts()
-
-    def parse_departure(post):
-        departure = post.get("departure", "")
-        if departure.endswith("Z"):
-            departure = departure[:-1] + "+00:00"
-        try:
-            parsed = datetime.fromisoformat(departure)
-            if parsed.tzinfo is None:
-                return parsed.replace(tzinfo=CENTRAL)
-            return parsed.astimezone(CENTRAL)
-        except ValueError:
-            return datetime.min.replace(tzinfo=CENTRAL)
-
-    now_central = datetime.now(CENTRAL)
     upcoming_posts = [post for post in posts if parse_departure(post) >= now_central]
 
     for post in sorted(upcoming_posts, key=parse_departure):
@@ -101,20 +101,6 @@ with plans:
 
 with mine:
     posts = api.get_user_posts(st.session_state["user_id"])
-
-    def parse_departure(post):
-        departure = post.get("departure", "")
-        if departure.endswith("Z"):
-            departure = departure[:-1] + "+00:00"
-        try:
-            parsed = datetime.fromisoformat(departure)
-            if parsed.tzinfo is None:
-                return parsed.replace(tzinfo=CENTRAL)
-            return parsed.astimezone(CENTRAL)
-        except ValueError:
-            return datetime.min.replace(tzinfo=CENTRAL)
-
-    now_central = datetime.now(CENTRAL)
     upcoming_posts = [post for post in posts if parse_departure(post) >= now_central]
 
     for post in sorted(upcoming_posts, key=parse_departure):

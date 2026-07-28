@@ -23,7 +23,6 @@ def get_id(username):
         user = response.json()
         return user["id"]
     else:
-        print(f"Error: {response.status_code}")
         return None
 
 def join_plan(post_id, user_id):
