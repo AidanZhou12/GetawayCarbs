@@ -2,6 +2,9 @@ import streamlit as st
 import api
 from datetime import datetime, time
 from zoneinfo import ZoneInfo
+from openai import OpenAI
+
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 CENTRAL = ZoneInfo("America/Chicago")
 
@@ -54,7 +57,7 @@ st.set_page_config(page_title="Getaway Carbs")
 st.title("Getaway Carbs")
 st.space("large")
 
-create, plans, mine, joins = st.tabs(["Create a Plan", "View Plans", "My Plans", "My Joins"]) 
+create, plans, mine, joins, ideas = st.tabs(["Create a Plan", "View Plans", "My Plans", "My Joins", "Ideas"]) 
 
 with create:
     st.header("Create a New Plan")
@@ -143,5 +146,22 @@ with joins:
                     st.rerun()
                 else:
                     st.error(f"Error leaving plan: {response.json().get('detail', 'Unknown error')}")
+
+with ideas:
+    food_idea = st.text_area("What kind of food do you want? (eg. Mexican, Italian, etc.)", max_chars=100)
+    distance_idea = st.slider("How far would you like to drive (miles)?", min_value=1, max_value=20, step=1)
+    budget_idea = st.slider("How much money would you like to spend ($)?", min_value=5, max_value=100, step=1)
+    if st.button("Generate Suggestions"):
+        if food_idea:
+            with st.spinner("Generating suggestions..."):
+                response = client.responses.create(
+                    model="gpt-5.6-terra",
+                    input=f"Suggest some restaurants for a {food_idea} style lunch with a budget of ${budget_idea} and within {distance_idea} miles of 5025 Plano Parkway in Carrollton, Texas (75010).",
+                    instructions="Provide the restaurant names, addresses, and brief descriptions in a bulleted list format. Limit the suggestions to 5 restaurants. Only give the suggestions and nothing else. Do not include any additional commentary or explanations."
+                )
+                st.text_area("Restaurant Suggestions", value=response.output_text, height=300)
+        else:
+            st.error("Please enter a type of food to get suggestions.")
+
 
 
