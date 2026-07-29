@@ -2,3 +2,4 @@ __pycache__/**
 venv/**
 routers/**/__pycache__/**
 *.db
+.streamlit/**
