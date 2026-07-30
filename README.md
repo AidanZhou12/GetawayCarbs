@@ -4,7 +4,7 @@ A full-stack web-app that makes it easier for coworkers to coordinate lunch plan
 
 ## Problem
 
-During my time working for Cencora, I would often go to lunch and see individuals who worked at the same office as me picking up their meals at the same place as me. This wasted opportunity to save time, save gas, and connect with others prompted me to create a way for employees who might be familiar with each other to lunch together.
+During my time working for Cencora, I would often go to lunch and see individuals who worked at the same office as me picking up their meals at the same place as me. This wasted opportunity to save time, save gas, and connect with others prompted me to create a way for employees who might be unfamiliar with each other to lunch together.
 
 ## Solution
 
