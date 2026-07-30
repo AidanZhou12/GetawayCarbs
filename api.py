@@ -1,7 +1,7 @@
 import requests
 import json
 
-url = "http://localhost:8000/api/"
+url = "https://getawaycarbs.onrender.com/api/"
 
 def get_posts():
     response = requests.get(url + "posts")
