@@ -1,59 +1,37 @@
 # Getaway Carbs
 
-An in-progress full-stack web-app that makes it easier for coworkers to coordinate lunch plans
+A full-stack web-app that makes it easier for coworkers to coordinate lunch plans
 
-## Goal
+## Problem
 
-Help coworkers coordinate lunch plans by making it easier to discover, join, and organize meals together
+During my time working for Cencora, I would often go to lunch and see individuals who worked at the same office as me picking up their meals at the same place as me. This wasted opportunity to save time, save gas, and connect with others prompted me to create a way for employees who might be familiar with each other to lunch together.
 
-## MVP
+## Solution
 
-Users can:
+Using [Getaway Carbs](https://getawaycarbs-h8d3fjbyhsfebpxkv35n7x.streamlit.app/) workers can let other users know what they plan on having for lunch or join others who already established their plans to cut down on trips and connect with others in the office.
 
-- Create a lunch plan
-- View lunch plans from coworkers
-- Join an existing lunch plan
-- Delete or edit their own plan
+## Tech Stack
 
-## Concepts
+- Database: PostgreSQL
+- Backend: FastAPI
+- Frontend: Streamlit
 
-- FastAPI
-- SQLAlchemy
-- SQLite
-- Streamilt
-- Routers
-- Path parameters
-- Query parameters
-- Pydantic schemas
-- CRUD operations
-- Rest APIs
+## Features
 
-## Organization
+- Those who already know their plans can create a post with the restaurant, departure time, order type (dine-in, takeout, or pickup), and any notes like how long they plan on staying there. If you change your mind, the *My Plans* tab allows you to delete your post.
+- Using the *View Plans* tab, any active plan can be viewed and joining it is as easy as clicking a button. If you change your mind, the *My Joins* tab that lets you see what plans you've joined has a button to leave a given plan.
+- If you don't know what you want to do and none of the active plans sound appealing, the *Ideas* tab generates an AI summary of places to go to. All you need to do is input what kind of food you want, how far from the office you are willing to drive, and how much money you are looking to spend.
+- The distance is based on how far a location is from the Cencora office I worked at when I developed this app.
 
-Backend:
+## Possible Improvements
 
-- FastAPI application
-- API routers
-- SQLAlchemy models
-- Pydantic schemas
-- Database configuration
+Although this project was built for me to learn concepts like full-stack development, FastAPI, and databases, I have some ideas on how this app could be improved should any company wish to implement it for their workplace.
 
-Frontend:
+- Turning the AI suggestion into a full chatbot to suggest better restaurants
+- Implementing authentication so you can make sure a person joining or creating a plan is who they're supposed to be
+- A feature that lets people within the same plan chat with each other to easily plan their departure
+- Being able to limit the amount of people joining based on car space or other factors
 
-- Streamlit application
-- API client for communicating with FastAPI
+## Aside
 
-Database:
-
-- SQLite
-
-## Workflow
-
-1. Design database
-2. Build FastAPI backend
-3. Test endpoints with Swagger
-4. Build Streamlit frontend
-5. Connect frontend to backend
-6. Polish app
-7. Add AI recommendation
-8. Turn AI into chatbot
+I did not come up with the name. I got it from a Reddit comment when I was looking for Taylor Swift-inspired names for this app.
