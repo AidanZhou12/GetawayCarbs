@@ -51,6 +51,10 @@ def parse_departure(post):
     except ValueError:
         return datetime.min.replace(tzinfo=CENTRAL)
 
+
+def format_departure(post):
+    return parse_departure(post).strftime("%H:%M")
+
 now_central = datetime.now(CENTRAL)
 
 st.set_page_config(page_title="Getaway Carbs")
@@ -93,7 +97,7 @@ with plans:
             st.title(post["restaurant"])
             st.write(f'**Organizer:** {post["author"]["username"]}')
             st.write(f'**Order Type:** {post["order"]}')
-            st.write(f'**Leaving at:** {post["departure"][11:16]}')
+            st.write(f'**Leaving at:** {format_departure(post)}')
             st.write(f'**Additional Notes:** {post["notes"]}')
             st.write(f'**Participants:** {", ".join([p["user"]["username"] for p in post["participants"]])}')
             if st.button("Join Plan", key=f"join_{post['id']}"):
@@ -114,7 +118,7 @@ with mine:
         with box:
             st.title(post["restaurant"])
             st.write(f'**Order Type:** {post["order"]}')
-            st.write(f'**Leaving at:** {post["departure"][11:16]}')
+            st.write(f'**Leaving at:** {format_departure(post)}')
             st.write(f'**Additional Notes:** {post["notes"]}')
             st.write(f'**Participants:** {", ".join([p["user"]["username"] for p in post["participants"]])}')
             if st.button("Delete Plan", key=f"delete_{post['id']}"):
@@ -135,7 +139,7 @@ with joins:
             st.title(post["restaurant"])
             st.write(f'**Organizer:** {post["author"]["username"]}')
             st.write(f'**Order Type:** {post["order"]}')
-            st.write(f'**Leaving at:** {post["departure"][11:16]}')
+            st.write(f'**Leaving at:** {format_departure(post)}')
             st.write(f'**Additional Notes:** {post["notes"]}')
             st.write(f'**Participants:** {", ".join([p["user"]["username"] for p in post["participants"]])}')
             if st.button("Leave Plan", key=f"leave_{post['id']}"):
