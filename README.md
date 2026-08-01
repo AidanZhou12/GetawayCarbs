@@ -25,7 +25,7 @@ Using [Getaway Carbs](https://getawaycarbs-h8d3fjbyhsfebpxkv35n7x.streamlit.app/
 
 ## Possible Improvements
 
-Although this project was built for me to learn concepts like full-stack development, FastAPI, and databases, I have some ideas on how this app could be improved should any company wish to implement it for their workplace.
+Although this project was built for me to learn concepts like full-stack development, FastAPI, and databases in preparation to build something bigger, I have some ideas on how this app could be improved should I ever decide to come back to it.
 
 - Turning the AI suggestion into a full chatbot to suggest better restaurants
 - Implementing authentication so you can make sure a person joining or creating a plan is who they're supposed to be
