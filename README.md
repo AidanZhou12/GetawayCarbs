@@ -8,7 +8,7 @@ During my time working for Cencora, I would often go to lunch and see individual
 
 ## Solution
 
-Using [Getaway Carbs](https://getawaycarbs-h8d3fjbyhsfebpxkv35n7x.streamlit.app/) workers can let other users know what they plan on having for lunch or join others who already established their plans to cut down on trips and connect with others in the office.
+Using Getaway Carbs, workers can let other users know what they plan on having for lunch or join others who already established their plans to cut down on trips and connect with others in the office.
 
 ## Tech Stack
 
@@ -34,4 +34,4 @@ Although this project was built for me to learn concepts like full-stack develop
 
 ## Aside
 
-I did not come up with the name. I got it from a Reddit comment when I was looking for Taylor Swift-inspired names for this app.
+Since creating this project in July of 2026, I have built other projects that better showcase my ability to develop software. Due to this, I have stopped paying Render $13 per month to keep this project up and running.
